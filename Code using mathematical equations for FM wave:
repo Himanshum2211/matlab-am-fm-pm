@@ -1,0 +1,50 @@
+% Frequency Modulation and Demodulation using mathematical equations for FM wave
+
+% Time specifications
+Fs = 1000;                      % Sampling frequency
+t = 0:1/Fs:1-1/Fs;             % Time vector
+% Define message signal
+fm = 10;                        % Message signal frequency
+Am = 1;                         % Message signal amplitude
+m = Am*sin(2*pi*fm*t);          % Message signal
+% Define carrier signal
+fc = 100;                       % Carrier signal frequency
+Ac = 1;                         % Carrier signal amplitude
+c = Ac*sin(2*pi*fc*t);          % Carrier signal
+% Frequency modulation
+kf = 5;                         % Frequency deviation constant
+s = Ac*sin(2*pi*fc*t + kf*c);   % Modulated signal
+% Frequency demodulation
+kf_hat = 5;                     % Estimate of frequency deviation constant
+c_hat = Ac*sin(2*pi*fc*t + kf_hat*c);   % Reconstruct the carrier signal
+x = s.*c_hat;                   % Demodulated signal
+[b,a] = butter(6,2*fm/Fs);      % Butterworth filter
+y = filtfilt(b,a,x);            % Filtered signal
+% Plot the signals
+subplot(4,1,1);
+plot(t,m);
+xlabel('Time (s)');
+ylabel('Amplitude');
+title('Message signal');
+grid on;
+
+subplot(4,1,2);
+plot(t,c);
+xlabel('Time (s)');
+ylabel('Amplitude');
+title('Carrier signal');
+grid on;
+
+subplot(4,1,3);
+plot(t,s);
+xlabel('Time (s)');
+ylabel('Amplitude');
+title('Modulated signal');
+grid on;
+
+subplot(4,1,4);
+plot(t,y);
+xlabel('Time (s)');
+ylabel('Amplitude');
+title('Demodulated signal');
+grid on;
